@@ -12,10 +12,14 @@ class Conversation:
 
     def send_message(self, message):
         self.history.append({"role":"user", "content":message})
-        botMessage =  self.provider.chat.completions.create(model="gpt-4.1-nano", messages=self.history)
-        content = botMessage.choices[0].message.content
+        botMessage =  self.provider.chat.completions.create(model="gpt-4.1-nano", messages=self.history, stream=True)
+        content = ""
+        print("\nBot: ", end="", flush=True)
+        for chunk in botMessage:
+            if (chunk.choices[0].delta.content is not None):
+                content += chunk.choices[0].delta.content
+                print(chunk.choices[0].delta.content, end="", flush=True)
         self.history.append({"role": "assistant", "content": content})
-        return content
     
     def clear(self):
         self.history = []
