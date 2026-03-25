@@ -20,6 +20,18 @@ class Conversation:
                 content += chunk.choices[0].delta.content
                 print(chunk.choices[0].delta.content, end="", flush=True)
         self.history.append({"role": "assistant", "content": content})
+        return content
+    
+    def chatStream(self, message, history):
+        self.history = history
+        self.history.append({"role":"user", "content":message})
+        botMessage =  self.provider.chat.completions.create(model="gpt-4.1-nano", messages=self.history, stream=True)
+        partial = ""
+        for chunk in botMessage:
+            content = chunk.choices[0].delta.content
+            if content is not None:
+                partial += content
+                yield partial
     
     def clear(self):
         self.history = []

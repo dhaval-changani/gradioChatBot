@@ -1,27 +1,17 @@
-import os
-from openai import OpenAI
-from dotenv import load_dotenv
 import gradio as gr
+from config import Config
+from providers.factory import ChatClient
+from conversation import Conversation
 
-load_dotenv()
-
-OPENAI_API_KEY =  os.environ.get("OPENAI_API_KEY")
-GPT_MODEL = "gpt-4.1-nano-2025-04-14"
-
-client = OpenAI()
-
-assistant = {"role": "assistant", "content": "You are a personal assistant, named Nikita, help user solve any problem they face"}
+config = Config("",0.7,500,"openai")
+client = ChatClient(config).get_client()
+conversation = Conversation(client, "You are a helpful Data Scientist assistant")
 
 def assistant_response(message, history):
-    messages=[assistant, *history, {"role": "user", "content": message}]
-    print(messages)
-    response = client.chat.completions.create(model=GPT_MODEL, messages=messages, stream=true)
-    responseContent = response.choices[0].message.content
-    return responseContent
+    yield from conversation.chatStream(message,history)
 
 chatBot = gr.ChatInterface(fn=assistant_response, 
-                           title="Private Concierge",
-                           description="Helps with anything you want!",
-)
+                           title="Data Scientist Assistant", 
+                           description="Ask me anything about data science! I can help with concepts, code, and more.")
 
 chatBot.launch()
