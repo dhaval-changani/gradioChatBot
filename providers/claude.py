@@ -1,6 +1,7 @@
-
 from openai import OpenAI
 from config import Config
+class AnthropicClient(OpenAI):
 
-def claude_provider(config: Config):
-    return OpenAI(api_key=config.api_key, base_url="https://api.anthropic.com/v1/",)
+    def __init__(self, config: Config) -> None:
+        self.config = config
+        super().__init__(api_key=self.config.api_key, base_url="https://api.anthropic.com/v1/",)
