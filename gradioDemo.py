@@ -14,7 +14,7 @@ def get_model_list(provider, api_key):
 def setup_conversation(provider, api_key, model, system_prompt, temperature, max_tokens):
     config = Config(api_key, temperature, int(max_tokens), provider, model)
     client = get_client(config)
-    return Conversation(client, system_prompt)
+    return Conversation(client, config, system_prompt)
 
 
 def assistant_response(message, history, conversation):
