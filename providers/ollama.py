@@ -1,6 +1,7 @@
 from openai import OpenAI
 from config import Config
 
+
 class OllamaClient(OpenAI):
 
     def __init__(self, config: Config) -> None:

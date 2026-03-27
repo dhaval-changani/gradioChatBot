@@ -28,9 +28,6 @@ gradioChatBot/
 2. Create a `.env` file:
    ```
    OPENAI_API_KEY=your_api_key_here
-   PROVIDER=openai          # openai | ollama | claude
-   TEMPERATURE=0.7
-   MAX_TOKENS=150
    ```
 
 ## Usage
@@ -48,6 +45,7 @@ Options:
 | `--provider` | Provider: `openai`, `ollama`, or `claude` |
 | `--temperature` | Sampling temperature |
 | `--max_tokens` | Max tokens in response |
+| `--model` | Update the model which should be used to chat with Ai |
 
 Example:
 ```bash

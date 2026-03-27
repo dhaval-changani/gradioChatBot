@@ -16,13 +16,13 @@
 ## Next Tasks
 
 ### Core improvements
-- [ ] **Make model configurable** — Model name (`gpt-4.1-nano`) is hardcoded in `conversation.py`; expose it via `Config` and CLI `--model` option
-- [ ] **Fix Gradio system prompt** — `gradioDemo.py` has a hardcoded system prompt; make it configurable (env var or UI input)
-- [ ] **Provider support in Gradio UI** — Gradio always uses OpenAI; add provider selection to the UI or read from env
-- [ ] **Persist conversation across Gradio sessions** — Currently `conversation` is a global; use Gradio `State` to give each browser session its own history
+- [x] **Make model configurable** — Model name (`gpt-4.1-nano`) is hardcoded in `conversation.py`; expose it via `Config` and CLI `--model` option
+- [x] **Fix Gradio system prompt** — `gradioDemo.py` has a hardcoded system prompt; make it configurable (env var or UI input)
+- [x] **Provider support in Gradio UI** — Gradio always uses OpenAI; add provider selection to the UI or read from env
+- [x] **Persist conversation across Gradio sessions** — Currently `conversation` is a global; use Gradio `State` to give each browser session its own history
 
 ### Features
-- [ ] **Conversation export** — Save chat history to a file (JSON or Markdown) from CLI (`save` command) or Gradio download button
+- [x] **Conversation export** — Save chat history to a file (JSON or Markdown) from CLI (`save` command) or Gradio download button
 - [ ] **Token usage display** — Show token count / cost estimate after each response
 - [ ] **System prompt editor in UI** — Allow users to change the system prompt mid-session via a Gradio `Textbox`
 - [ ] **Multi-turn context limit** — Trim history when it exceeds a token limit to avoid API errors on long conversations

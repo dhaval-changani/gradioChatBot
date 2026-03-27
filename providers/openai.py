@@ -1,6 +1,8 @@
 
 from openai import OpenAI
 from config import Config
+
+
 class OpenAIClient(OpenAI):
 
     def __init__(self, config: Config) -> None:
