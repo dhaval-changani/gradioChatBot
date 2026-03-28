@@ -60,6 +60,10 @@ def assistant_response(message, history, conversation):
     yield from conversation.chatStream(message, history)
 
 
+def token_usage(conversation):
+    return conversation.get_usage()
+
+
 with gr.Blocks() as demo:
     gr.Label(
         "Setup your system prompt, select the provider and model, and start chatting!")
@@ -82,7 +86,7 @@ with gr.Blocks() as demo:
         temperature_input = gr.Slider(
             label="Temperature", minimum=0.0, maximum=1.0, value=0.7, step=0.1)
         max_tokens_input = gr.Slider(
-            label="Max Tokens", minimum=1, maximum=2048, value=1000, step=1)
+            label="Max Tokens", minimum=1, maximum=2048, value=1000, step=10)
 
     system_prompt_input = gr.Textbox(
         label="System Prompt", placeholder="Enter the system prompt...")
@@ -106,6 +110,15 @@ with gr.Blocks() as demo:
     gr.ChatInterface(
         fn=assistant_response,
         additional_inputs=[conversation_state]
+    )
+
+    # show token usage
+    token_usage_btn = gr.Button("Show Token Usage")
+    token_usage_output = gr.Textbox(label="Token Usage", interactive=False)
+    token_usage_btn.click(
+        fn=token_usage,
+        inputs=[conversation_state],
+        outputs=[token_usage_output]
     )
 
     gr.Markdown("---")

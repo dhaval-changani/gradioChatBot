@@ -23,7 +23,7 @@
 
 ### Features
 - [x] **Conversation export** — Save chat history to a file (JSON or Markdown) from CLI (`save` command) or Gradio download button
-- [ ] **Token usage display** — Show token count / cost estimate after each response
+- [x] **Token usage display** — Show token count / cost estimate after each response
 - [ ] **System prompt editor in UI** — Allow users to change the system prompt mid-session via a Gradio `Textbox`
 - [ ] **Multi-turn context limit** — Trim history when it exceeds a token limit to avoid API errors on long conversations
 - [ ] **Retry / error handling** — Graceful error messages when the API call fails (rate limits, network issues)

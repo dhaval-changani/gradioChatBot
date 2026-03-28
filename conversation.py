@@ -8,6 +8,7 @@ class Conversation:
         self.provider = provider
         self.config = config
         self.history = []
+        self.usage = 0
         if system_prompt:
             self.history.append({"role": "system", "content": system_prompt})
 
@@ -27,17 +28,29 @@ class Conversation:
         self.history = list(history)
         self.history.append({"role": "user", "content": message})
         botMessage = self.provider.chat.completions.create(
-            model=self.config.model, messages=self.history, stream=True)
+            model=self.config.model, messages=self.history, stream=True, stream_options={"include_usage": True})
         partial = ""
         for chunk in botMessage:
+
+            # if usage chunk
+            if chunk.usage is not None:
+                self.usage += chunk.usage.total_tokens | 0
+                print(f"\n[Usage: {self.usage} tokens]", flush=True)
+                continue
+
             content = chunk.choices[0].delta.content
             if content is not None:
                 partial += content
                 yield partial
+
         self.history.append({"role": "assistant", "content": partial})
 
     def clear(self):
         self.history = []
+        self.usage = 0
 
     def get_history(self):
         return self.history
+
+    def get_usage(self):
+        return self.usage
