@@ -8,6 +8,8 @@ from config import Config
 from providers.factory import get_client
 from conversation import Conversation
 
+DEFAULT_PROVIDER = "ollama"
+
 
 def export_conversation(conversation, fmt):
     """Export chat history as JSON or Markdown. Returns a temp file path for download."""
@@ -61,6 +63,7 @@ def assistant_response(message, history, conversation):
 
 
 def token_usage(conversation):
+    print(conversation.get_history())
     return conversation.get_usage()
 
 
@@ -72,7 +75,7 @@ with gr.Blocks() as demo:
         provider_input = gr.Dropdown(
             choices=["openai", "ollama", "claude"],
             label="Select Provider",
-            value="openai",
+            value=DEFAULT_PROVIDER,
             interactive=True
         )
         api_key_input = gr.Textbox(

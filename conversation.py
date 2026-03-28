@@ -1,21 +1,25 @@
 
 
+from typing import cast
+
 from openai import OpenAI
+from openai.types.chat import ChatCompletionMessageParam
 
 
 class Conversation:
-    def __init__(self, provider: OpenAI, config, system_prompt=None):
+    def __init__(self, provider: OpenAI, config, system_prompt="You are a helpful assistant"):
         self.provider = provider
         self.config = config
-        self.history = []
+        self.history = [
+            {"role": "system", "content": system_prompt}]
         self.usage = 0
-        if system_prompt:
-            self.history.append({"role": "system", "content": system_prompt})
+        self.system_prompt = system_prompt
 
     def send_message(self, message):
         self.history.append({"role": "user", "content": message})
+
         botMessage = self.provider.chat.completions.create(
-            model=self.config.model, messages=self.history, stream=True)
+            model=self.config.model, messages=cast(list[ChatCompletionMessageParam], self.history), stream=True)
         content = ""
         print("\nBot: ", end="", flush=True)
         for chunk in botMessage:
@@ -26,9 +30,22 @@ class Conversation:
 
     def chatStream(self, message, history):
         self.history = list(history)
+
+        # remove system prompt is already exists
+        if self.system_prompt is not None and len(self.history) > 0:
+
+            first_message = self.history[0]
+            if first_message["role"] == "system":
+                self.history.pop(0)
+
+            self.history.insert(
+                0, {"role": "system", "content": self.system_prompt})
+
         self.history.append({"role": "user", "content": message})
+
         botMessage = self.provider.chat.completions.create(
-            model=self.config.model, messages=self.history, stream=True, stream_options={"include_usage": True})
+            model=self.config.model, messages=cast(list[ChatCompletionMessageParam], self.history), stream=True, stream_options={"include_usage": True})
+
         partial = ""
         for chunk in botMessage:
 
@@ -44,6 +61,7 @@ class Conversation:
                 yield partial
 
         self.history.append({"role": "assistant", "content": partial})
+        print(self.history)  # for newline after bot response
 
     def clear(self):
         self.history = []
